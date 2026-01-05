@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+<!--         <record id="bank_payroll_all_excel" model="ir.actions.report">-->
+<!--            <field name="name">Bank Payroll Report Excel</field>-->
+<!--            <field name="model">bank_payroll.wizard</field>-->
+<!--            <field name="report_type">xlsx</field>-->
+<!--            <field name="report_name">hr_egypt.bank_payroll_report</field>-->
+<!--            <field name="report_file">Payroll Bank Report</field>-->
+<!--        </record>-->
+
+<!--        <record id="insurance_report_payroll_all_excel" model="ir.actions.report">-->
+<!--            <field name="name">Insurance Report Excel</field>-->
+<!--            <field name="model">bank_payroll.wizard</field>-->
+<!--            <field name="report_type">xlsx</field>-->
+<!--            <field name="report_name">hr_egypt.insurance_emergency_report</field>-->
+<!--            <field name="report_file">Insurance Emergency Report</field>-->
+<!--        </record>-->
+
+        <record id="payslip_break_down_report_excel" model="ir.actions.report">
+            <field name="name">Payslip Details Report Excel</field>
+            <field name="model">bank_payroll.wizard</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">hr_raspa.payslip_breakdown_report</field>
+            <field name="report_file">Payslip Master Report</field>
+        </record>
+
+
+
+
+
+    </data>
+</odoo>

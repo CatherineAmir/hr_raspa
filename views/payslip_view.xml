@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_egypt_form_inherit" model="ir.ui.view">
+            <field name="name">payslip_hr_egypt.form</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+
+
+
+                <xpath expr="//field[@name='line_ids']/list//field[@name='currency_id']" position="after">
+                    <field name="secondary_currency" widget="boolean_toggle"/>
+                    <field name="secondary_currency_id" invisible="not secondary_currency"/>
+                    <field name="secondary_amount" invisible="not secondary_currency"/>
+                    <field name="exchange_rate" invisible="not secondary_currency"/>
+
+
+                </xpath>
+<!--                <xpath expr="//field[@name='input_line_ids']/list//field[@name='amount']" position="after">-->
+
+<!--                    <field name="secondary_currency" widget="boolean_toggle"/>-->
+<!--                    <field name="secondary_currency_id" invisible="not secondary_currency" optional="hide"/>-->
+<!--                    <field name="secondary_amount" invisible="not secondary_currency" optional="hide"/>-->
+<!--                    <field name="exchange_rate" invisible="not secondary_currency" optional="hide"/>-->
+<!--                </xpath>-->
+            </field>
+        </record>
+
+
+
+
+    </data>
+</odoo>
