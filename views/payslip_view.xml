@@ -8,6 +8,10 @@
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
+                  <xpath expr="//button[@name='action_payslip_done']" position="after">
+
+                    <button name="employee_resign" string="Settlement Time off" type="object" />
+                </xpath>
 
 
                 <xpath expr="//field[@name='struct_id']" position="after">
@@ -35,9 +39,6 @@
 <!--                </xpath>-->
             </field>
         </record>
-
-
-
 
     </data>
 </odoo>
