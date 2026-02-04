@@ -21,6 +21,7 @@
         'views/salary_structure.xml',
         'wizards/batch_wizard_view.xml',
         'views/contract.xml',
+        "views/payslip_lines_view.xml",
     ],
     'license': 'LGPL-3',
     'installable': True,
