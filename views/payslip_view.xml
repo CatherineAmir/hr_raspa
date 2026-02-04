@@ -10,6 +10,13 @@
             <field name="arch" type="xml">
 
 
+                <xpath expr="//field[@name='struct_id']" position="after">
+                    <field name="secondary_currency_id"/>
+                    <field name="currency_rate"/>
+
+                </xpath>
+
+
 
                 <xpath expr="//field[@name='line_ids']/list//field[@name='currency_id']" position="after">
                     <field name="secondary_currency" widget="boolean_toggle"/>
