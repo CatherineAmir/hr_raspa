@@ -2,7 +2,7 @@ from odoo import fields, models, api
 from datetime import datetime
 
 class PayslipMasterReportExcel(models.AbstractModel):
-    _name="report.hr_raspa_payslip_breakdown_report"
+    _name="report.hr_raspa.payslip_breakdown_report"
     _inherit = 'report.report_xlsx.abstract'
     _description = "Payslip Master Report"
 
@@ -101,5 +101,4 @@ class PayslipMasterReportExcel(models.AbstractModel):
                     sheet.write_number(row, j + 6, totals[j], yellow_format)
                 else:
                     sheet.write_number(row, j + 6, totals[j], yellow_format)
-
 

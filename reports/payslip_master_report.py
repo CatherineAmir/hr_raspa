@@ -8,7 +8,8 @@ class PayslipMasterReportExcel(models.AbstractModel):
 
     def generate_xlsx_report(self, workbook, data, lines):
 
-
+        color_format = workbook.add_format(
+            {'align': 'center', 'bold': True, 'bg_color': "#ff944d", 'border': 2, 'num_format': '#,##0.00'})
 
 
         cell_format = workbook.add_format({'align': 'center',
@@ -42,32 +43,50 @@ class PayslipMasterReportExcel(models.AbstractModel):
             raise UserWarning("You can't generate report for multiple salary structures, please select one salary structure.")
         else:
             headers = ["Employee Name","Joining Date", "Department", "Job Position"]+struct_ids[0].mapped("rule_ids").mapped("name")
-
+            totals = [0.0] * (len(struct_ids[0].rule_ids.filtered(lambda rule: rule.appears_on_payslip)))
+            total_departments = [0.0] * len(struct_ids[0].rule_ids.filtered(lambda rule: rule.appears_on_payslip))
             sheet.set_column(0, len(headers), width=40)
+
+            current_department = False
+
             for i in range(0, len(headers)):
 
                 sheet.write_string(0, i, str(headers[i]), header_format)
             row = 1
             totals= [0.0] * (len(struct_ids[0].rule_ids))
+            counter=0
             for i in range(0, len(payslips_ids)):
 
                 payslip = payslips_ids[i]
                 employee = payslip.employee_id
-                currency = payslip.currency_id.symbol if payslip.currency_id else ""
-                # sheet.write_string(row, 0, str(employee.employee_code), cell_format)
+
+
+                if current_department and employee.department_id.name != current_department:
+                    counter = 0
+                    sheet.merge_range(row, 0, row, 3, f' إجمالي قسم {current_department}', color_format)
+                    for j in range(0, len(total_departments)):
+                        sheet.write_number(row, j + 4, total_departments[j], color_format)
+
+                    total_departments = [0.0] * len(
+                        struct_ids[0].rule_ids.filtered(lambda rule: rule.appears_on_payslip))
+                    row += 1
+
                 sheet.write_string(row, 0, str(employee.name), cell_format)
-                # sheet.write_string(row, 2, str(employee.employee_name_arabic or ""), cell_format)
                 sheet.write_string(row, 1, str(employee.first_contract_date or ""), cell_format)
                 sheet.write_string(row, 2, str(employee.department_id.name or ""), cell_format)
                 sheet.write_string(row, 3, str(employee.job_id.name or ""), cell_format)
 
+                current_department = employee.department_id.name
+
+                counter += 1
 
                 for j in range(0, len(struct_ids[0].rule_ids)):
                     rule = struct_ids[0].rule_ids[j]
                     value = payslip.line_ids.filtered(lambda x: x.salary_rule_id.id == rule.id).total
 
                     sheet.write_number(row, j + 4, abs(value), cell_format)
-
+                    totals[j] += abs(value) if value else 0.0
+                    total_departments[j] += abs(value) if value else 0.0
                     totals[j] += abs(value) if value else 0.0
                 row += 1
             for j in range(0, len(totals)):
