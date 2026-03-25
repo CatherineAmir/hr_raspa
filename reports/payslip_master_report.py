@@ -40,12 +40,12 @@ class PayslipMasterReportExcel(models.AbstractModel):
         })
         sheet = workbook.add_worksheet("Masters Payslip All")
 
-        payslips_ids = self.env["hr.payslip"].search([("id", "in", data["form"]["payslips_ids"])])
+        payslips_ids = self.env["hr.payslip"].search([("id", "in", data["form"]["payslips_ids"])],order="department_id")
         struct_ids=payslips_ids.mapped("struct_id")
         if len(struct_ids) > 1:
             raise ValidationError("You can't generate report for multiple salary structures, please select one salary structure.")
         else:
-            headers = ["Employee Name","Joining Date", "Department", "Job Position"]+struct_ids[0].mapped("rule_ids").mapped("name")
+            headers = ["Employee Sequence","Employee Name","Joining Date", "Department", "Job Position"]+struct_ids[0].mapped("rule_ids").mapped("name")
             totals = [0.0] * (len(struct_ids[0].rule_ids.filtered(lambda rule: rule.appears_on_payslip)))
             total_departments = [0.0] * len(struct_ids[0].rule_ids.filtered(lambda rule: rule.appears_on_payslip))
             sheet.set_column(0, len(headers), width=40)
@@ -66,34 +66,40 @@ class PayslipMasterReportExcel(models.AbstractModel):
 
                 if current_department and employee.department_id.name != current_department:
                     counter = 0
-                    sheet.merge_range(row, 0, row, 3, f' إجمالي قسم {current_department}', color_format)
+                    sheet.merge_range(row, 0, row, 4, f' إجمالي قسم {current_department}', color_format)
                     for j in range(0, len(total_departments)):
-                        sheet.write_number(row, j + 4, total_departments[j], color_format)
+                        sheet.write_number(row, j + 5, total_departments[j], color_format)
 
                     total_departments = [0.0] * len(
                         struct_ids[0].rule_ids.filtered(lambda rule: rule.appears_on_payslip))
                     row += 1
-
-                sheet.write_string(row, 0, str(employee.name), cell_format)
-                sheet.write_string(row, 1, str(employee.first_contract_date or ""), cell_format)
-                sheet.write_string(row, 2, str(employee.department_id.name or ""), cell_format)
-                sheet.write_string(row, 3, str(employee.job_id.name or ""), cell_format)
+                counter += 1
+                sheet.write_string(row, 0, str(counter), cell_format)
+                sheet.write_string(row, 1, str(employee.name), cell_format)
+                sheet.write_string(row, 2, str(employee.first_contract_date or ""), cell_format)
+                sheet.write_string(row, 3, str(employee.department_id.name or ""), cell_format)
+                sheet.write_string(row, 4, str(employee.job_id.name or ""), cell_format)
 
                 current_department = employee.department_id.name
 
-                counter += 1
+
 
                 for j in range(0, len(struct_ids[0].rule_ids)):
                     rule = struct_ids[0].rule_ids[j]
                     value = payslip.line_ids.filtered(lambda x: x.salary_rule_id.id == rule.id).total
 
-                    sheet.write_number(row, j + 4, abs(value), cell_format)
+                    sheet.write_number(row, j + 5, abs(value), cell_format)
                     totals[j] += abs(value) if value else 0.0
                     total_departments[j] += abs(value) if value else 0.0
                     totals[j] += abs(value) if value else 0.0
                 row += 1
+            sheet.merge_range(row, 0, row, 4, f' إجمالي قسم {current_department}', color_format)
+            for j in range(0, len(total_departments)):
+                sheet.write_number(row, j + 5, total_departments[j], color_format)
+
+            row += 1
+
+            sheet.merge_range(row, 0, row, 4, f' إجمالي مرتبات   لاجمالي عدد موظفين {len(payslips_ids)} ',
+                              yellow_format)
             for j in range(0, len(totals)):
-                if totals[j] > 0:
-                    sheet.write_number(row, j + 4, totals[j], yellow_format)
-                else:
-                    sheet.write_number(row, j + 4, totals[j], yellow_format)
+                sheet.write_number(row, j + 5, totals[j], yellow_format)
