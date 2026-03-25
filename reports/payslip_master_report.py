@@ -1,7 +1,7 @@
 from odoo import fields, models, api
 from datetime import datetime
 
-from odoo.odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError
 
 
 class PayslipMasterReportExcel(models.AbstractModel):
