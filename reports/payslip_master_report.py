@@ -1,6 +1,9 @@
 from odoo import fields, models, api
 from datetime import datetime
 
+from odoo.odoo.exceptions import ValidationError
+
+
 class PayslipMasterReportExcel(models.AbstractModel):
     _name="report.hr_raspa.payslip_breakdown_report"
     _inherit = 'report.report_xlsx.abstract'
@@ -40,7 +43,7 @@ class PayslipMasterReportExcel(models.AbstractModel):
         payslips_ids = self.env["hr.payslip"].search([("id", "in", data["form"]["payslips_ids"])])
         struct_ids=payslips_ids.mapped("struct_id")
         if len(struct_ids) > 1:
-            raise UserWarning("You can't generate report for multiple salary structures, please select one salary structure.")
+            raise ValidationError("You can't generate report for multiple salary structures, please select one salary structure.")
         else:
             headers = ["Employee Name","Joining Date", "Department", "Job Position"]+struct_ids[0].mapped("rule_ids").mapped("name")
             totals = [0.0] * (len(struct_ids[0].rule_ids.filtered(lambda rule: rule.appears_on_payslip)))
