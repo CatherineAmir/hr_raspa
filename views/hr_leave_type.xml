@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="leave_type_form_inherit" model="ir.ui.view">
+            <field name="name">leave_type_form</field>
+            <field name="model">hr.leave.type</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='allocation_validation_type']" position="after">
+                    <field name="used_in_end_payslip" widget="boolean_toggle"/>
+
+
+
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

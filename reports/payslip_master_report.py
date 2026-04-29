@@ -88,10 +88,10 @@ class PayslipMasterReportExcel(models.AbstractModel):
                     rule = struct_ids[0].rule_ids[j]
                     value = payslip.line_ids.filtered(lambda x: x.salary_rule_id.id == rule.id).total
 
-                    sheet.write_number(row, j + 5, abs(value), cell_format)
-                    totals[j] += abs(value) if value else 0.0
-                    total_departments[j] += abs(value) if value else 0.0
-                    totals[j] += abs(value) if value else 0.0
+                    sheet.write_number(row, j + 5, value, cell_format)
+                    totals[j] += value if value else 0.0
+                    total_departments[j] += value if value else 0.0
+
                 row += 1
             sheet.merge_range(row, 0, row, 4, f' إجمالي قسم {current_department}', color_format)
             for j in range(0, len(total_departments)):

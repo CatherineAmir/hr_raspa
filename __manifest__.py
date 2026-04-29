@@ -22,6 +22,7 @@
         'wizards/batch_wizard_view.xml',
         'views/contract.xml',
         "views/payslip_lines_view.xml",
+        'views/hr_leave_type.xml',
     ],
     'license': 'LGPL-3',
     'installable': True,

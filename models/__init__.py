@@ -4,3 +4,4 @@ from . import hr_payslip
 from . import hr_salary_rule
 from . import salary_structure
 from . import contract
+from . import hr_leave_type
